@@ -9,7 +9,6 @@
 
  exit 
 
- fi 
 
  msg () { 
 
