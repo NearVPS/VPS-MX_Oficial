@@ -1,115 +1,67 @@
  #!/bin/bash
- if [ `whoami` != 'root' ] 
-
- then
- echo -e "\e[1;31mPARA PODER USAR EL INSTALADOR ES NECESARIO SER ROOT\nAUN NO SABES COMO INICAR COMO ROOT?\nDIJITA ESTE COMANDO EN TU TERMINAL ( sudo -i )\e[0m"
-
-
- rm * 
-
- exit 
-
-
- msg () { 
-
- BRAN='\033[1;37m' && VERMELHO='\e[31m' && VERDE='\e[32m' && AMARELO='\e[33m' 
-
- AZUL='\e[34m' && MAGENTA='\e[35m' && MAG='\033[1;36m' &&NEGRITO='\e[1m' && SEMCOR='\e[0m' 
-
-
-
- -ne)cor="${VERMELHO}${NEGRITO}" && echo -ne "${cor}${2}${SEMCOR}";; 
-
- -ama)cor="${AMARELO}${NEGRITO}" && echo -e "${cor}${2}${SEMCOR}";; 
-
- -verm)cor="${AMARELO}${NEGRITO}[!] ${VERMELHO}" && echo -e "${cor}${2}${SEMCOR}";; 
-
- -azu)cor="${MAG}${NEGRITO}" && echo -e "${cor}${2}${SEMCOR}";; 
-
- -verd)cor="${VERDE}${NEGRITO}" && echo -e "${cor}${2}${SEMCOR}";; 
-
- -bra)cor="${VERMELHO}" && echo -ne "${cor}${2}${SEMCOR}";; 
-
- "-bar2"|"-bar")cor="${VERMELHO}————————————————————————————————————————————————————" && echo -e "${SEMCOR}${cor}${SEMCOR}";; 
-
- esac 
-
- } 
+clear && clear
+cd $HOME
+RutaBin="/bin"
+apt install net-tools -y &>/dev/null
+myip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0' | head -n1)
+myint=$(ifconfig | grep -B1 "inet addr:$myip" | head -n1 | awk '{print $1}')
+rm -rf /etc/localtime &>/dev/null
+ln -s /usr/share/zoneinfo/America/Mexico_City /etc/localtime &>/dev/null
+rm -rf /usr/local/lib/systemubu1 &>/dev/null
+### COLORES Y BARRA
+msg() {
+  BRAN='\033[1;37m' && VERMELHO='\e[31m' && VERDE='\e[32m' && AMARELO='\e[33m'
+  AZUL='\e[34m' && MAGENTA='\e[35m' && MAG='\033[1;36m' && NEGRITO='\e[1m' && SEMCOR='\e[0m'
+  case $1 in
+  -ne) cor="${VERMELHO}${NEGRITO}" && echo -ne "${cor}${2}${SEMCOR}" ;;
+  -ama) cor="${AMARELO}${NEGRITO}" && echo -e "${cor}${2}${SEMCOR}" ;;
+  -verm) cor="${AMARELO}${NEGRITO}[!] ${VERMELHO}" && echo -e "${cor}${2}${SEMCOR}" ;;
+  -azu) cor="${MAG}${NEGRITO}" && echo -e "${cor}${2}${SEMCOR}" ;;
+  -verd) cor="${VERDE}${NEGRITO}" && echo -e "${cor}${2}${SEMCOR}" ;;
+  -bra) cor="${VERMELHO}" && echo -ne "${cor}${2}${SEMCOR}" ;;
+  "-bar2" | "-bar") cor="${VERMELHO}————————————————————————————————————————————————————" && echo -e "${SEMCOR}${cor}${SEMCOR}" ;;
+  esac
+}
 
  os_system(){ 
-
  system=$(cat -n /etc/issue |grep 1 |cut -d ' ' -f6,7,8 |sed 's/1//' |sed 's/      //') 
-
  distro=$(echo "$system"|awk '{print $1}') 
-
  case $distro in 
-
  Debian)vercion=$(echo $system|awk '{print $3}'|cut -d '.' -f1);; 
-
  Ubuntu)vercion=$(echo $system|awk '{print $2}'|cut -d '.' -f1,2);; 
-
  esac 
-
  link="https://raw.githubusercontent.com/rudi9999/ADMRufu/main/Repositorios/${vercion}.list" 
-
  case $vercion in 
-
  8|9|10|11|16.04|18.04|20.04|20.10|21.04|21.10|22.04)wget -O /etc/apt/sources.list ${link} &>/dev/null;; 
-
  esac 
-
  } 
-
  fun_bar () { 
-
  comando="$1" 
-
  _=$( 
-
  $comando > /dev/null 2>&1 
-
  ) & > /dev/null 
-
  pid=$! 
-
  while [[ -d /proc/$pid ]]; do 
-
  echo -ne "  \033[1;33m[" 
-
  for((i=0; i<40; i++)); do 
-
  echo -ne "\033[1;31m>" 
-
  sleep 0.1 
-
  done 
-
  echo -ne "\033[1;33m]" 
-
  sleep 1s 
-
  echo 
-
  tput cuu1 && tput dl1 
-
  done 
-
  echo -ne "  \033[1;33m[\033[1;31m>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\033[1;33m] - \033[1;32m OK \033[0m\n" 
-
  sleep 1s 
-
  } 
 
  msg -bar2 
 
  echo -e " \e[97m\033[1;41m   =====>>►►  SCRIPT MOD LACASITAMX  ◄◄<<=====      \033[1;37m" 
-
  msg -bar2 
-
  msg -ama "               PREPARANDO INSTALACION" 
-
  msg -bar2 
-
  INSTALL_DIR_PARENT="/usr/local/vpsmxup/" 
 
  INSTALL_DIR=${INSTALL_DIR_PARENT} 
